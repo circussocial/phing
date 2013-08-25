@@ -1,36 +1,12 @@
 <?php
-/*
- *  $Id$
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information please see
- * <http://phing.info>.
- */
- 
+
 require_once 'phing/Task.php';
 require_once 'phing/tasks/ext/git/GitBaseTask.php';
 
 /**
- * Wrapper aroung git-log
+ * Wrapper around git-log
  *
- * @author Evan Kaufman <evan@digitalflophouse.com>
- * @author Victor Farazdagi <simple.square@gmail.com>
- * @version $Id$
- * @package phing.tasks.ext.git
  * @see VersionControl_Git
- * @since 2.4.5
  */
 class GitLogTask extends GitBaseTask
 {
@@ -80,7 +56,7 @@ class GitLogTask extends GitBaseTask
      * <until> argument to git-log
      * @var string
      */
-    private $untilCommit = 'HEAD';
+    private $untilCommit;
     
     /**
      * <path> arguments to git-log
@@ -119,27 +95,23 @@ class GitLogTask extends GitBaseTask
         if (null !== $this->getDate()) {
             $command->setOption('date', $this->getDate());
         }
-
-        if (null !== $this->getSince()) {
-            $command->setOption('since', $this->getSince());
+        
+        if (null !== $this->getSince() && null !== $this->getUntil()) {
+            $command->addArgument($this->getSince() . '..' . $this->getUntil());
         }
-        $command->setOption('until', $this->getUntil());
-
-        $command->addDoubleDash(true);
+        
         if (null !== $this->getPaths()) {
-            $command->addDoubleDash(false);
+            $command->addArgument('--');
             $paths = explode(PATH_SEPARATOR, $this->getPaths());
             foreach ($paths as $path) {
                 $command->addArgument($path);
             }
         }
 
-        $this->log('git-log command: ' . $command->createCommandString(), Project::MSG_INFO);
-
         try {
             $output = $command->execute();
         } catch (Exception $e) {
-            throw new BuildException('Task execution failed', $e);
+            throw new BuildException('Task execution failed');
         }
 
         if (null !== $this->outputProperty) {
@@ -231,12 +203,7 @@ class GitLogTask extends GitBaseTask
     {
         return $this->sinceCommit;
     }
-
-    public function setAfter($after)
-    {
-        $this->setSince($after);
-    }
-
+    
     public function setUntil($until)
     {
         $this->untilCommit = $until;
@@ -246,12 +213,7 @@ class GitLogTask extends GitBaseTask
     {
         return $this->untilCommit;
     }
-
-    public function setBefore($before)
-    {
-        $this->setUntil($before);
-    }
-
+    
     public function setPaths($paths)
     {
         $this->paths = $paths;
@@ -266,5 +228,4 @@ class GitLogTask extends GitBaseTask
     {
         $this->outputProperty = $prop;
     }
-
 }

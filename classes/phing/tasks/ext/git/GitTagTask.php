@@ -1,23 +1,4 @@
 <?php
-/*
- *  $Id$
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information please see
- * <http://phing.info>.
- */
 
 require_once 'phing/Task.php';
 require_once 'phing/tasks/ext/git/GitBaseTask.php';
@@ -25,12 +6,7 @@ require_once 'phing/tasks/ext/git/GitBaseTask.php';
 /**
  * Wrapper around git-tag
  *
- * @author Evan Kaufman <evan@digitalflophouse.com>
- * @author Victor Farazdagi <simple.square@gmail.com>
- * @version $Id$
- * @package phing.tasks.ext.git
  * @see VersionControl_Git
- * @since 2.4.5
  */
 class GitTagTask extends GitBaseTask
 {
@@ -65,7 +41,7 @@ class GitTagTask extends GitBaseTask
     private $delete = false;
     
     /**
-     * Verify gpg signature of given tag names. See -v of git-tag
+     * Verify gpg signature of given tag names.. See -v of git-tag
      * @var boolean
      */
     private $verify = false;
@@ -75,13 +51,6 @@ class GitTagTask extends GitBaseTask
      * @var boolean
      */
     private $list = false;
-
-    /**
-     * <num> specifies how many lines from the annotation, if any, are printed 
-     * when using -l. See -n of git-tag
-     * @var int
-     */
-    private $num;
     
     /**
      * Only list tags containing specified commit. See --contains of git-tag
@@ -102,7 +71,7 @@ class GitTagTask extends GitBaseTask
     private $file;
     
     /**
-     * <tagname> argument to git-tag
+     * <name> argument to git-tag
      * @var string
      */
     private $name;
@@ -153,18 +122,21 @@ class GitTagTask extends GitBaseTask
         if (null !== $this->getKeySign()) {
             $command->setOption('u', $this->getKeySign());
         }
-
+        if (null !== $this->getContains()) {
+            $command->setOption('contains', $this->getContains());
+        }
         if (null !== $this->getMessage()) {
             $command->setOption('m', $this->getMessage());
         }
-
         if (null !== $this->getFile()) {
             $command->setOption('F', $this->getFile());
         }
         
         // Use 'name' arg, if relevant
-        if (null != $this->getName() && false == $this->isList()) {
-            $command->addArgument($this->getName());
+        if (null !== $this->getKeySign() || $this->isAnnotate() || $this->isSign() || $this->isDelete() || $this->isVerify()) {
+            if (null !== $this->getName()) {
+                $command->addArgument($this->getName());
+            }
         }
         
         if (null !== $this->getKeySign() || $this->isAnnotate() || $this->isSign()) {
@@ -172,35 +144,27 @@ class GitTagTask extends GitBaseTask
             if (null === $this->getMessage() && null === $this->getFile()) {
                 throw new BuildException('"message" or "file" required to make a tag');
             }
+            
+            // Use 'commit' or 'object' args, if relevant
+            if (null !== $this->getCommit()) {
+                $command->addArgument($this->getCommit());
+            }
+            if (null !== $this->getObject()) {
+                $command->addArgument($this->getObject());
+            }
         }
 
-        // Use 'commit' or 'object' args, if relevant
-        if (null !== $this->getCommit()) {
-            $command->addArgument($this->getCommit());
-        } else if (null !== $this->getObject()) {
-            $command->addArgument($this->getObject());
-        }
-        
-        // Customize list (-l) options
+        // Use 'pattern' arg, if relevant
         if ($this->isList()) {
-            if (null !== $this->getContains()) {
-                $command->setOption('contains', $this->getContains());
-            }
             if (null !== $this->getPattern()) {
                 $command->addArgument($this->getPattern());
             }
-            if (null != $this->getNum()) {
-                $command->setOption('n', $this->getNum());
-            }
         }
-
-        $this->log('git-tag command: ' . $command->createCommandString(), Project::MSG_INFO);
 
         try {
             $output = $command->execute();
         } catch (Exception $e) {
-            $this->log($e->getMessage(), Project::MSG_ERR);
-            throw new BuildException('Task execution failed. ' . $e->getMessage());
+            throw new BuildException('Task execution failed');
         }
 
         if (null !== $this->outputProperty) {
@@ -268,11 +232,6 @@ class GitTagTask extends GitBaseTask
         return $this->getReplace();
     }
 
-    public function setForce($flag)
-    {
-        return $this->setReplace($flag);
-    }
-    
     public function setDelete($flag)
     {
         $this->delete = (bool)$flag;
@@ -316,16 +275,6 @@ class GitTagTask extends GitBaseTask
     public function isList()
     {
         return $this->getList();
-    }
-
-    public function setNum($num)
-    {
-        $this->num = (int)$num;
-    }
-    
-    public function getNum()
-    {
-        return $this->num;
     }
 
     public function setContains($commit)
@@ -403,4 +352,3 @@ class GitTagTask extends GitBaseTask
         $this->outputProperty = $prop;
     }
 }
-
