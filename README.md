@@ -1,7 +1,7 @@
 P     H     I     N     G
 =========================
 
-  [![Build Status](https://secure.travis-ci.org/phingofficial/phing.png)](http://travis-ci.org/phingofficial/phing)
+
 
   (PH)ing (I)s (N)ot (G)NU make; it's a PHP project build system or build
   tool based on Apache Ant. You can do anything with it that you could do
@@ -49,6 +49,7 @@ Assuming you are running a Unix dialect operating system with the bash bourne sh
   export PHING_HOME=/opt/phing
   export PHP_CLASSPATH=${PHING_HOME}/classes
   export PATH=${PATH}:${PHING_HOME}/bin
+  
 Windows
 
 On the Windows platfrom, assuming Phing is installed in c:\opt\phing. The following sets up your environment:
