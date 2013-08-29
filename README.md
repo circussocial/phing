@@ -39,13 +39,37 @@ The Latest Version
 Installation
 ------------
 
-  The preferred method to install Phing is through PEAR and the Phing PEAR
-  channel. You can install Phing by adding the pear.phing.info channel
-  to your PEAR environment and then installing Phing using the *phing*
-  channel alias and *phing* package name:
+ If you are using Phing in conjunction with another application, you may need to add additional paths to PHP_CLASSPATH.
 
-    $> pear channel-discover pear.phing.info
-    $> pear install [--alldeps] phing/phing
+Unix
+
+Assuming you are running a Unix dialect operating system with the bash bourne shell and Phing is installed in /opt/phing . The following sets up the environment properly:
+
+  export PHP_COMMAND=/usr/bin/php
+  export PHING_HOME=/opt/phing
+  export PHP_CLASSPATH=${PHING_HOME}/classes
+  export PATH=${PATH}:${PHING_HOME}/bin
+Windows
+
+On the Windows platfrom, assuming Phing is installed in c:\opt\phing. The following sets up your environment:
+
+  set PHP_COMMAND=c:\opt\php\php.exe
+  set PHING_HOME=c:\opt\phing
+  set PHP_CLASSPATH=c:\opt\phing\classes
+  set PATH=%PATH%;%PHING_HOME%\bin
+Advanced
+
+There are lots of variants that can be used to run/prepare Phing. You need at least the following:
+
+If you want Phing to be able to use other packages / classes, you can either add them to the PHP_CLASSPATH or to PHP's include_path.
+Some Tasks in phing/tasks/ext may require 3rd party libraries to be installed. Generally, tools with compatible license (and stable releases) are included in phing/lib so that outside dependencies can be avoided. PEAR libs will not, however, be bundled with Phing since they are generally bundled with PHP. If you are using a 3rd party task, see the Task documentation to be aware of any dependencies.
+You are now ready to use the phing command at your command prompt, from everywhere in your directory tree.
+
+Calling Phing
+
+Now you are prepared to execute Phing on the command line or via script files. The following section briefly describe how to properly execute phing.
+
+
 
 Documentation
 -------------
