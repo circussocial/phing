@@ -46,18 +46,27 @@ Unix
 Assuming you are running a Unix dialect operating system with the bash bourne shell and Phing is installed in /opt/phing . The following sets up the environment properly:
 
   export PHP_COMMAND=/usr/bin/php
+  
   export PHING_HOME=/opt/phing
+  
   export PHP_CLASSPATH=${PHING_HOME}/classes
+  
   export PATH=${PATH}:${PHING_HOME}/bin
+  
+  
   
 Windows
 
 On the Windows platfrom, assuming Phing is installed in c:\opt\phing. The following sets up your environment:
 
   set PHP_COMMAND=c:\opt\php\php.exe
+  
   set PHING_HOME=c:\opt\phing
+  
   set PHP_CLASSPATH=c:\opt\phing\classes
+  
   set PATH=%PATH%;%PHING_HOME%\bin
+  
 Advanced
 
 There are lots of variants that can be used to run/prepare Phing. You need at least the following:
