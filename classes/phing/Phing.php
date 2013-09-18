@@ -47,22 +47,22 @@ include_once 'phing/system/io/FileOutputStream.php';
 include_once 'phing/system/io/FileReader.php';
 include_once 'phing/system/util/Register.php';
 
-include_once 'phing/tasks/git/GitBaseTask.php';
-include_once 'phing/tasks/git/GitBranchTask.php';
-include_once 'phing/tasks/git/GitCheckoutTask.php';
-include_once 'phing/tasks/git/GitCloneTask.php';
-include_once 'phing/tasks/git/GitCommitTask.php';
-include_once 'phing/tasks/git/GitDescribeTask.php';
-include_once 'phing/tasks/git/GitDiffTask.php';
-include_once 'phing/tasks/git/GitFetchTask.php';
-include_once 'phing/tasks/git/GitGcTask.php';
-include_once 'phing/tasks/git/GitInitTask.php';
-include_once 'phing/tasks/git/GitLogTask.php';
-include_once 'phing/tasks/git/GitMergeTask.php';
-include_once 'phing/tasks/git/GitPullTask.php';
-include_once 'phing/tasks/git/GitPushTask.php';
-include_once 'phing/tasks/git/GitRemoteShowTask.php';
-include_once 'phing/tasks/git/GitTagTask.php';
+include_once 'phing/tasks/ext/git/GitBaseTask.php';
+include_once 'phing/tasks/ext/git/GitBranchTask.php';
+include_once 'phing/tasks/ext/git/GitCheckoutTask.php';
+include_once 'phing/tasks/ext/git/GitCloneTask.php';
+include_once 'phing/tasks/ext/git/GitCommitTask.php';
+include_once 'phing/tasks/ext/git/GitDescribeTask.php';
+include_once 'phing/tasks/ext/git/GitDiffTask.php';
+include_once 'phing/tasks/ext/git/GitFetchTask.php';
+include_once 'phing/tasks/ext/git/GitGcTask.php';
+include_once 'phing/tasks/ext/git/GitInitTask.php';
+include_once 'phing/tasks/ext/git/GitLogTask.php';
+include_once 'phing/tasks/ext/git/GitMergeTask.php';
+include_once 'phing/tasks/ext/git/GitPullTask.php';
+include_once 'phing/tasks/ext/git/GitPushTask.php';
+include_once 'phing/tasks/ext/git/GitRemoteShowTask.php';
+include_once 'phing/tasks/ext/git/GitTagTask.php';
 
 /**
  * Entry point into Phing.  This class handles the full lifecycle of a build -- from
